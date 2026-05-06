@@ -1,0 +1,82 @@
+# Ghana Statistical Service (GSS) CPI Basket Weights
+# Source: GSS Consumer Price Index — 2021 Rebased Series
+# Reference period: January 2021 = 100
+# Weights reflect urban household expenditure shares (sum to 100)
+#
+# Mapping: cpi_category (in url.csv / scraped data) -> GSS division + weight
+
+basket:
+
+  Food & Beverages:
+    gss_division: "Food and non-alcoholic beverages"
+    weight: 42.50          # largest single division in Ghana CPI
+    subcategories:
+      cereals_and_grains:
+        label: "Cereals and grain products"
+        weight: 10.20
+        keywords: [rice, maize, flour, oats, sorghum, millet, wheat, cassava, yam, cocoyam, plantain, grain, cereal]
+      meat_fish_eggs:
+        label: "Meat, fish and eggs"
+        weight: 12.80
+        keywords: [chicken, beef, pork, lamb, fish, tilapia, tuna, sardine, egg, turkey, mutton, herring, shrimp, crab]
+      oils_and_fats:
+        label: "Oils and fats"
+        weight: 4.10
+        keywords: [oil, palm oil, groundnut oil, coconut oil, vegetable oil, butter, margarine, lard, fat]
+      fruits_and_vegetables:
+        label: "Fruits and vegetables"
+        weight: 7.40
+        keywords: [tomato, pepper, onion, garden egg, banana, orange, pineapple, mango, watermelon, avocado, lettuce, cabbage, carrot, spinach, fruit, vegetable, apple, grape]
+      dairy_and_beverages:
+        label: "Dairy products, beverages and other food"
+        weight: 8.00
+        keywords: [milk, yogurt, cheese, tea, coffee, cocoa, milo, water, juice, soda, soft drink, drink, beverage, sugar, salt, condiment, sauce, spice]
+
+  Household:
+    gss_division: "Housing, water, electricity, gas and other fuels"
+    weight: 9.80
+    subcategories:
+      household_goods:
+        label: "Household goods and services"
+        weight: 9.80
+        keywords: [detergent, soap, cleaning, bucket, broom, mop, bleach, disinfectant, laundry, dish, tissue, paper, toiletry, sanitary, household]
+
+  Clothing & Personal Care:
+    gss_division: "Clothing and footwear"
+    weight: 7.20
+    subcategories:
+      clothing:
+        label: "Clothing and footwear"
+        weight: 4.50
+        keywords: [shirt, dress, trouser, skirt, shoe, sandal, cloth, fabric, kente, ankara, blouse, jacket, coat, shorts, socks, underwear, clothing, apparel, wear, outfit]
+      personal_care:
+        label: "Personal care products"
+        weight: 2.70
+        keywords: [shampoo, lotion, cream, deodorant, perfume, cosmetic, makeup, skincare, body, hair, nail, toothbrush, toothpaste, razor, personal care]
+
+  General:
+    gss_division: "Miscellaneous goods and services"
+    weight: 40.50          # residual — electronics, furniture, pharma, education, transport, etc.
+    subcategories:
+      electronics_and_appliances:
+        label: "Electronics and appliances"
+        weight: 8.00
+        keywords: [phone, laptop, computer, tv, television, radio, speaker, charger, cable, electronics, appliance, refrigerator, fan, iron, blender]
+      transport:
+        label: "Transport"
+        weight: 10.20
+        keywords: [tyre, tires, motor, fuel, petrol, diesel, battery, car, vehicle, bicycle, transport]
+      health_and_pharma:
+        label: "Health and pharmaceuticals"
+        weight: 6.30
+        keywords: [medicine, tablet, capsule, drug, syrup, vitamin, supplement, pharmacy, health, medical, cream, ointment]
+      education_and_other:
+        label: "Education and other services"
+        weight: 16.00
+        keywords: []   # catch-all for unclassified
+
+# Base period for IMPI normalisation
+base_period: "2026-01"
+
+# Minimum records per category per week to include in index computation
+min_records_per_category: 3

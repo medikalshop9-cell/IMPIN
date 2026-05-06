@@ -1,0 +1,6 @@
+model,test_rmse,test_mae,test_mape_pct,dir_acc
+Naive (random walk),23.515,18.6855,7.1917,0.5
+"ARIMAX(1,1,0)",60.9833,53.0184,18.4295,0.8333
+XGBoost,73.9509,61.3454,20.8428,0.6667
+Random Forest,75.9188,63.8697,21.8297,0.75
+Prophet,134.6763,117.7396,42.9353,0.3333

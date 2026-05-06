@@ -1,0 +1,13 @@
+variable,label,transform,n_obs,adf_stat,adf_p,adf_lags,adf_cv5,adf_stationary,kpss_stat,kpss_p,kpss_cv5,kpss_nonstationary,conclusion
+wfp_food_index,WFP Food Index,Level (raw),48,0.3246,0.9784,6,-2.9351,False,0.8094,0.01,0.463,True,NON-STATIONARY ✗
+wfp_food_index,WFP Food Index,Level (log),48,0.9209,0.9934,9,-2.9413,False,0.8183,0.01,0.463,True,NON-STATIONARY ✗
+wfp_food_index,WFP Food Index,First diff (raw),47,-4.6914,0.0001,5,-2.9351,True,0.0657,0.1,0.463,False,STATIONARY ✓
+wfp_food_index,WFP Food Index,First diff (log-ret),47,-4.3828,0.0003,8,-2.9413,True,0.0436,0.1,0.463,False,STATIONARY ✓
+ghsusd,GHS/USD (implied),Level (raw),48,-0.0749,0.9519,2,-2.9283,False,0.8295,0.01,0.463,True,NON-STATIONARY ✗
+ghsusd,GHS/USD (implied),Level (log),48,-0.1816,0.9407,1,-2.9268,False,0.8708,0.01,0.463,True,NON-STATIONARY ✗
+ghsusd,GHS/USD (implied),First diff (raw),47,-7.335,0.0,1,-2.9283,True,0.186,0.1,0.463,False,STATIONARY ✓
+ghsusd,GHS/USD (implied),First diff (log-ret),47,-11.1934,0.0,0,-2.9268,True,0.1772,0.1,0.463,False,STATIONARY ✓
+brent,Brent Crude,Level (raw),48,-1.214,0.6675,0,-2.9253,False,0.6692,0.0163,0.463,True,NON-STATIONARY ✗
+brent,Brent Crude,Level (log),48,-1.4441,0.561,0,-2.9253,False,0.6594,0.0172,0.463,True,NON-STATIONARY ✗
+brent,Brent Crude,First diff (raw),47,-5.3564,0.0,0,-2.9268,True,0.1254,0.1,0.463,False,STATIONARY ✓
+brent,Brent Crude,First diff (log-ret),47,-5.0212,0.0,0,-2.9268,True,0.0732,0.1,0.463,False,STATIONARY ✓

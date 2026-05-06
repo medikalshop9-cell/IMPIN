@@ -1,0 +1,156 @@
+4# IMPIN — LLM Context File
+
+> This file provides structured context about the IMPIN project for use by
+> large language models, AI coding assistants, and automated agents.
+
+---
+
+## What is IMPIN?
+
+IMPIN (Informal Market Price Intelligence Network) is an academic data science
+capstone project at Africa Business School (UM6P), Rabat, Morocco.
+
+**Academic Claim:**
+> *IMPIN is a real-time food price intelligence system for Ghana with three layers:*
+> *(1) a live scrape-based price index updated weekly;*
+> *(2) a nowcast of the current food CPI component before official GSS release;*
+> *(3) a 1–3 month forecast comparing classical time-series and ML models.*
+
+**Students:** Acheampong Yaw HINNEH · Abiola OKUNSANYA  
+**Year:** 2025–2027 · **Pilot city:** Accra, Ghana
+
+---
+
+## System Overview
+
+The system has two data tracks that feed a unified dashboard:
+
+**Track 1 — Historical Forecasting (WFP data, 48 months):**
+- Data: WFP VAM Ghana food prices + GHS/USD rate + Brent crude (FRED)
+- Panel: `data/processed/historical_panel.parquet` — 48 months, aligned monthly
+- Models: ARIMAX(1,1,0) [done, 83.3% directional accuracy] + XGBoost + RF + Prophet
+- Purpose: Forecast food price index 1–3 months ahead; compare models
+
+**Track 2 — Live Cross-Section (scraped data, 1 snapshot):**
+- Data: `data/raw/scraped_combined.csv` — 1,586 products, May 2026, 5 sources
+- Models: Isolation Forest + K-Means + Z-score
+- Purpose: Detect anomalous prices, identify expensive clusters
+
+**Glue (Nowcast):**
+- Append IMPIN snapshot as latest point in historical series
+- Run best forecasting model forward to current period
+- Compare: model estimate for May 2026 vs. IMPIN live snapshot
+- This validates the 3-layer claim
+
+---
+
+## Current Status (May 2026)
+
+| Component | Status |
+|---|---|
+| All scrapers | ✅ Done |
+| scraped_combined.csv | ✅ 1,586 products |
+| WFP historical panel | ✅ 48 months |
+| EDA (15 plots + PDF) | ✅ Done |
+| Stationarity (all I(1)) | ✅ Done |
+| Granger VAR(1) | ✅ Done (null result, publishable) |
+| ARIMAX(1,1,0) | ✅ Done (83.3% dir acc) |
+| XGBoost + RF | 🔜 Next |
+| Prophet | 🔜 Next |
+| Nowcast validation | 🔜 Pending |
+| Anomaly detection | 🔜 Pending |
+| Streamlit dashboard | 🔜 Pending |
+
+---
+
+## Domain Vocabulary
+
+| Term | Definition |
+|---|---|
+| IMPIN | The full system (this project) |
+| wfp_food_index | WFP food price index constructed from VAM Ghana data, base 2019-08=100 |
+| CPI | Consumer Price Index — official measure published by Ghana Statistical Service (GSS) |
+| Nowcasting | Estimating the current value of an economic variable before official data is published |
+| VAR | Vector Autoregression — multivariate time-series model used for Granger testing |
+| ADF | Augmented Dickey-Fuller test — stationarity check |
+| I(1) | Integrated of order 1 — stationary after first differencing |
+| GSS | Ghana Statistical Service — official CPI publisher |
+| WFP VAM | World Food Programme Vulnerability Analysis and Mapping — our historical data source |
+| base_period | January 2026 = 100 — IMPIN snapshot normalisation reference |
+| RANDOM_SEED | 42 — used in all stochastic model components |
+
+---
+
+## Tech Stack
+
+- **Python:** 3.14
+- **Scraping:** Requests, BeautifulSoup, Playwright (JS-rendered sites)
+- **Data:** pandas, numpy, Parquet (processed), CSV (raw)
+- **Statistics:** statsmodels 0.14.6 (VAR, ARIMAX, ADF, KPSS), scipy
+- **ML:** scikit-learn — XGBoost (via sklearn API), Random Forest, Isolation Forest, K-Means
+- **Forecasting:** Prophet (Meta), statsmodels
+- **Visualisation:** matplotlib (Agg backend), Plotly
+- **Dashboard:** Streamlit
+
+---
+
+## Data Sources (confirmed)
+
+| Source | Status | Role |
+|---|---|---|
+| WFP VAM Ghana | ✅ Live | 14 commodities × 48 months historical |
+| Brent crude (FRED) | ✅ Live | Exogenous predictor |
+| GHS/USD rate | ✅ Implied from WFP | Exchange rate proxy |
+| FAO Food Price Index | ❌ Dropped | API unreachable |
+| GSS Ghana CPI | ❌ Dropped | PDF-only, no scrape path |
+| Konzoom (Shopify) | ✅ Live | 708 products |
+| Makola Stores (Shopify) | ✅ Live | 580 products |
+| Big Samps Market (WooCommerce) | ✅ Live | 214 products |
+| Shopnaw | ✅ Live | 74 products |
+| KiKUU | ✅ Live | 10 products |
+
+---
+
+## Constraints for Code Generation
+
+- Python 3.14 at `C:\Users\ayhin\AppData\Roaming\Python\Python314\`
+- matplotlib backend: always `matplotlib.use('Agg')` before import
+- Random seed: `RANDOM_SEED = 42`
+- Train/test split: train ≤ 2022-06, test 2022-07 → 2023-07
+- ML feature set: lag-1/2/3 of target, log_ghsusd, brent_lag6, month dummies
+- No LSTM/PyTorch — out of scope
+- No Granger causality as "primary finding" — it is a null result with interpretable context
+- No PII. No credentials in code.
+
+---
+
+## File Layout
+
+```
+IMPIN/
+├── scrapers/           # run_all.py + per-source scrapers
+├── pipeline/           # build_historical.py, build_index.py
+├── models/             # arimax_model.py, ml_forecast.py, prophet_model.py
+│   └── results/        # arimax_comparison.csv, comparison.csv
+├── analysis/           # eda.py, stationarity.py, granger.py
+├── anomaly/            # detector.py
+├── app/                # dashboard.py
+├── data/
+│   ├── raw/            # scraped_combined.csv (gitignored)
+│   ├── processed/      # historical_panel.parquet (gitignored)
+│   └── external/       # wfp_ghana_monthly_national.parquet, proxy_series.parquet
+├── outputs/
+│   ├── plots/          # 01_*.png … 10c_*.png
+│   └── *.csv           # reports
+└── config/
+    └── cpi_basket.yaml
+```
+
+---
+
+## Academic References
+
+- Cavallo (2018). Scraped Data and Sticky Prices. *REStat* 100(1), 105–119.
+- Cavallo & Rigobon (2016). The Billion Prices Project. *JEP* 30(2), 151–178.
+- WFP VAM (2023). Food Security and Market Monitoring in West Africa.
+- IMF WP/22/88 (2022). Overcoming Data Sparsity in Sub-Saharan Africa.

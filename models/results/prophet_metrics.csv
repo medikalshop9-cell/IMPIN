@@ -1,0 +1,2 @@
+model,test_rmse,test_mae,test_mape_pct,dir_acc,train_obs,test_obs
+Prophet,134.6763,117.7396,42.9353,0.3333,29,13

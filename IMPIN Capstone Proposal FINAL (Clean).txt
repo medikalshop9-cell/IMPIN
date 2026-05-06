@@ -1,0 +1,473 @@
+CAPSTONE PROJECT PROPOSAL
+
+Informal Market Price Intelligence Network (IMPIN)
+A Machine Learning Approach to Economic Nowcasting in Data-Sparse African Markets
+
+Students:       Acheampong Yaw HINNEH  |  Abiola OKUNSANYA
+Program:        Master in Management (MIM) — Africa Business School, UM6P
+Campus:         Rabat, Morocco
+Academic Year:  2025 – 2027
+Track:          Data Science / Machine Learning / Artificial Intelligence
+Status:         Proposal — May 2026
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. EXECUTIVE SUMMARY
+
+Inflation measurement in sub-Saharan Africa and North Africa suffers from a
+fundamental data lag: official Consumer Price Index (CPI) releases are
+published weeks or months after the period they measure, by which point
+economic damage from supply shocks or currency pressures is already
+entrenched.
+
+This project builds an Informal Market Price Intelligence Network (IMPIN) —
+a pipeline that scrapes and aggregates commodity prices from digital informal
+market proxies (e-commerce platforms, social media, and trader networks),
+constructs a real-time price index, and applies machine learning to detect
+inflation signals before official CPI releases.
+
+The core academic contribution is a Granger causality demonstration: that
+informal digital price data leads official CPI releases by 2–4 weeks, making
+IMPIN a viable nowcasting instrument for policymakers, central banks, and
+investors operating in data-sparse environments. The pilot focuses on Accra,
+Ghana, with an extensible framework applicable to Lagos and Casablanca.
+
+
+2. PROBLEM STATEMENT
+
+2.1  The African Data Gap
+
+Traditional macroeconomic models assume timely, granular, and reliable price
+data. This assumption collapses in the context of African economies, where:
+
+  - Official CPI releases lag by 4–8 weeks on average.
+  - Informal sectors account for approximately 55% of Sub-Saharan Africa's
+    GDP and 80% of its labour force, yet remain systematically under-measured
+    (African Development Bank, 2019).
+  - Survey-based data collection is expensive, infrequent, and geographically
+    sparse.
+  - Central banks and investors operate with significantly delayed signals.
+
+2.2  The Opportunity
+
+Digital informal market activity — mobile commerce listings, trader price
+posts on WhatsApp and Facebook, and e-commerce platform data — generates a
+continuous, high-frequency stream of price information. This data, previously
+unstructured and unexploited, can be harvested, structured, and transformed
+into a leading economic indicator.
+
+2.3  Research Gap
+
+While developed-market nowcasting (e.g., Google Trends-based inflation
+forecasting) is well-studied, African informal market price intelligence
+remains largely unexplored. This project targets that gap with a methodology
+purpose-built for low-resource, high-informality contexts.
+
+
+3. RESEARCH QUESTIONS
+
+  RQ1: Can scraped informal market price data be systematically aggregated
+       into a reliable weekly price index for Accra, Ghana?
+
+  RQ2: Does the IMPIN index Granger-cause official CPI releases, and if so,
+       by how many weeks?
+
+  RQ3: Can ML models (LSTM, Prophet) produce statistically significant
+       inflation forecasts using IMPIN data as input?
+
+  RQ4: Can anomaly detection identify commodity price shocks before they are
+       reflected in official statistics?
+
+
+4. OBJECTIVES
+
+4.1  Primary Objectives
+
+  - Build an automated scraping pipeline collecting daily commodity prices
+    from Jumia Ghana, Tonaton, and social media proxies.
+  - Construct a weekly Informal Market Price Index (IMPI) mirroring Ghana's
+    CPI basket composition.
+  - Demonstrate Granger causality between IMPI and Ghana Statistical Service
+    CPI releases.
+  - Deploy a forecasting model (LSTM or Prophet) achieving lower RMSE than a
+    naive baseline.
+
+4.2  Secondary Objectives
+
+  - Build a real-time Streamlit dashboard visualising price trends and anomaly
+    alerts.
+  - Establish a replicable framework extensible to Lagos (Nigeria) and
+    Casablanca (Morocco).
+  - Produce a policy brief targeting central bank and development finance
+    audiences.
+
+
+5. DATA SOURCES
+
+The pipeline scrapes price data from the following sources:
+
+  Source                    Description / Role
+  ─────────────────────────────────────────────────────────────────────────
+  Jumia Ghana               Primary scrape — Ghana's largest e-commerce
+                            platform; structured daily price data across
+                            food, household, and personal care categories.
+
+  Jiji Ghana (ex-Tonaton)   Classified listings marketplace; food traders,
+                            grain sellers, and agricultural produce with
+                            negotiated prices.
+
+  Melcom Online             Major Ghanaian retail chain; FMCG and household
+                            goods pricing for CPI basket cross-referencing.
+
+  Glovo Ghana               On-demand delivery platform; real-time restaurant
+                            and grocery prices reflecting daily market rates.
+
+  KiKUU                     Chinese-origin e-commerce active in Ghana;
+                            apparel, personal care, and household items.
+
+  Konzoom                   Ghanaian e-commerce platform; electronics and
+                            household goods — tracks non-food CPI components.
+
+  Big Samps Market          Online Ghanaian market platform; agricultural and
+                            food commodity listings from informal traders.
+
+  Makola Stores             Digital extension of Accra's Makola Market;
+                            direct price data from Ghana's largest informal
+                            trading hub.
+
+  Hubtel                    Ghanaian super-app with integrated merchant
+                            payments; price signals from local merchant
+                            transactions.
+
+  Bolt Food                 Food delivery; restaurant meal prices and grocery
+                            delivery rates — tracks food-away-from-home
+                            inflation.
+
+  SuperPrice Ghana          Price comparison platform; aggregates prices
+                            across multiple retailers enabling cross-platform
+                            indexing.
+
+  Meqasa                    Real estate listings; rental and property prices —
+                            tracks the housing cost component of CPI.
+
+  Cheki Ghana               Automotive marketplace; vehicle and transport
+                            listings — proxy for the transport CPI component.
+
+  Shopnaw                   Ghanaian e-commerce; consumer goods pricing
+                            supplementing FMCG basket coverage.
+
+  Laundry Chief             Service-sector pricing — tracks non-goods
+                            inflation in the personal services category.
+
+  WFP VAM Data Portal       Official food price monitoring across African
+                            markets — calibration anchor and ground truth
+                            baseline.
+
+  Ghana Statistical Service Official monthly CPI releases — target variable
+                            for Granger causality and forecasting models.
+
+  Bank of Ghana / FAO GIEWS Forex rates, monetary policy data, global
+                            commodity benchmarks — macroeconomic control
+                            variables.
+
+Target: 5,000+ raw scraped observations across all sources within the first
+three weeks of data collection, covering 15 commodity/product categories. At
+the aggregated index level, weekly IMPI data points will be computed from
+these raw observations for time-series modelling.
+
+
+6. METHODOLOGY
+
+6.1  Phase 1 — Data Collection Pipeline
+
+A modular Python scraper is built for each source using BeautifulSoup and
+Playwright (for JavaScript-rendered pages). Commodity targets mirror Ghana's
+CPI basket:
+
+  CPI Category                   Tracked Commodities
+  ─────────────────────────────────────────────────────────────────────────
+  Food & Non-Alcoholic Beverages  Rice, maize, tomatoes, onions, cooking
+                                  oil, chicken, fish, eggs, bread, sugar.
+
+  Transport Proxies               Petrol/diesel retail prices scraped from
+                                  GOIL and Total Ghana listings.
+
+  Housing Proxies                 LPG gas cylinder prices, kerosene.
+
+  Personal Care                   Soap, detergent — sampled on Jumia.
+
+6.2  Phase 2 — Price Index Construction
+
+Weekly price averages per commodity are computed and weighted using Ghana GSS
+CPI basket weights. The resulting Informal Market Price Index (IMPI) is
+normalised to a base period of January 2026 = 100.
+
+An NLP layer using spaCy and regex extracts price mentions from unstructured
+text posts (e.g., "Tomatoes GH₵12/basket today, Makola market"). Named entity
+recognition identifies commodity names, units, and prices.
+
+6.3  Phase 3 — Granger Causality Analysis
+
+The core statistical test is the Granger causality test between the weekly
+IMPI series and official monthly CPI releases. If IMPI Granger-causes CPI at
+lag k, the hypothesis holds: informal prices predict official inflation k
+periods ahead.
+
+Vector Autoregression (VAR) models will be used for multivariate causality
+testing, incorporating exchange rate and global commodity price controls.
+
+6.4  Phase 4 — Forecasting Models
+
+  Model         Role & Rationale
+  ─────────────────────────────────────────────────────────────────────────
+  Prophet       Baseline time-series decomposition — handles seasonality,
+  (Meta)        trend breaks, and missing data gracefully.
+
+  LSTM          Deep learning sequence model — captures non-linear temporal
+  (PyTorch)     patterns in price dynamics.
+
+  ARIMAX        Classical econometric benchmark — uses IMPI as an exogenous
+                regressor for CPI forecasting.
+
+  Ensemble      Weighted average of Prophet + LSTM outputs, optimised on
+                the validation set.
+
+6.5  Phase 5 — Anomaly Detection
+
+Isolation Forest and Z-score thresholding are applied to the weekly IMPI
+series to flag commodity price spikes. Alerts are surfaced in the dashboard
+with a confidence score and affected commodity list. Alerts are compared
+ex-post to inflation reports to measure precision and recall.
+
+6.6  Phase 6 — Dashboard
+
+A Streamlit application presents:
+  (1) A choropleth map of price levels by district.
+  (2) A time-series chart comparing IMPI vs. official CPI.
+  (3) An anomaly alert feed.
+  (4) A 4-week inflation forecast with confidence intervals.
+
+
+7. TECHNOLOGY STACK
+
+  Component              Tools                                 Purpose
+  ─────────────────────────────────────────────────────────────────────────
+  Data Collection        Python, BeautifulSoup, Playwright,    Web scraping
+                         Requests                              and HTTP
+                                                               automation.
+
+  NLP / Text Processing  spaCy, Regex, NLTK                    Price
+                                                               extraction from
+                                                               unstructured
+                                                               text.
+
+  Data Storage           SQLite (local), Supabase (cloud)      Structured
+                                                               price
+                                                               time-series
+                                                               storage.
+
+  Time Series            Prophet, PyTorch (LSTM),              Inflation
+  Forecasting            statsmodels                           nowcasting
+                                                               models.
+
+  Statistical Analysis   statsmodels VAR, scipy                Granger
+                                                               causality,
+                                                               ADF tests.
+
+  Anomaly Detection      scikit-learn Isolation Forest         Price spike
+                                                               alerting.
+
+  Geospatial             Folium, GeoPandas                     District-level
+                                                               price mapping.
+
+  Dashboard              Streamlit, Plotly                     Interactive
+                                                               visualisation
+                                                               and alerts.
+
+  Version Control        Git, GitHub                           Code and
+                                                               experiment
+                                                               tracking.
+
+  Environment            Python 3.11, Conda                    Dependency
+                                                               management.
+
+
+8. PROJECT TIMELINE
+
+  Phase          Milestone                    Key Deliverables
+  ─────────────────────────────────────────────────────────────────────────
+  Weeks 1–2      Data Pipeline Setup          Build Jumia + Tonaton scrapers;
+                                              integrate WFP VAM API;
+                                              initialise Supabase database;
+                                              begin daily data collection.
+
+  Week 3         Price Index Construction     Implement CPI basket weighting;
+                                              build IMPI aggregation module;
+                                              NLP price extractor for text
+                                              posts.
+
+  Weeks 4–5      Forecasting Models           Train Prophet and ARIMAX
+                                              baselines; implement LSTM in
+                                              PyTorch; cross-validate on
+                                              holdout period.
+
+  Week 6         Granger Causality Analysis   VAR model estimation; Granger
+                                              causality tests; ADF stationarity
+                                              checks; report lag structure.
+
+  Week 7         Anomaly Detection            Isolation Forest training;
+                                              threshold calibration; ex-post
+                                              validation against known shock
+                                              events (e.g., food crises).
+
+  Week 8         Streamlit Dashboard          Build interactive dashboard;
+                                              integrate map, time-series chart,
+                                              anomaly feed, and forecast widget.
+
+  Weeks 9–10     Write-Up & Presentation      Final paper (introduction,
+                                              literature, methodology, results,
+                                              conclusion); policy brief;
+                                              slide deck.
+
+
+9. EXPECTED OUTCOMES
+
+9.1  Academic Contributions
+
+  - A peer-review-ready paper demonstrating that informal digital price data
+    Granger-causes official CPI in Ghana.
+  - A reproducible methodology for informal price nowcasting applicable to
+    other data-sparse African economies.
+  - Benchmarked ML model performance (RMSE, MAE, directional accuracy) across
+    Prophet, LSTM, and ARIMAX.
+
+9.2  Practical Deliverables
+
+  - Open-source scraping and indexing pipeline (GitHub repository).
+  - Live Streamlit dashboard with 4-week inflation forecast and anomaly alerts.
+  - A policy brief targeting Bank of Ghana and development finance
+    institutions.
+  - A replication kit (documented code + synthetic dataset) for extending to
+    Lagos and Casablanca.
+
+9.3  Success Metrics
+
+  Metric                 Target
+  ─────────────────────────────────────────────────────────────────────────
+  Granger Causality      IMPI Granger-causes official CPI at p < 0.05 for
+                         at least one lag.
+
+  Forecast Accuracy      LSTM or Prophet achieves lower RMSE than a naive
+                         random walk baseline.
+
+  Anomaly Detection      Precision > 70% on known price shock events in
+                         the validation period.
+
+  Data Coverage          Minimum 8 weeks of daily price observations across
+                         10+ commodities.
+
+  Dashboard              Functional Streamlit app with live data updates
+                         and forecast visualisation.
+
+
+10. RISKS & MITIGATIONS
+
+  Risk                  Description                      Mitigation
+  ─────────────────────────────────────────────────────────────────────────
+  Scraper Blocking      Target sites implement anti-bot   Use Playwright with
+                        measures.                         randomised delays;
+                                                          rotate user agents;
+                                                          fall back to WFP VAM
+                                                          as primary source.
+
+  Data Sparsity         Insufficient historical data      Begin scraping in
+                        before project end.               Week 1; supplement
+                                                          with WFP VAM
+                                                          historical archive
+                                                          (2018–present).
+
+  CPI Basket Mismatch   Scraped commodities do not        Cross-reference GSS
+                        align with GSS weights.           2021 Household Income
+                                                          & Expenditure Survey
+                                                          for basket
+                                                          composition.
+
+  Model Overfitting     LSTM overfits on short time       Use Prophet as
+                        series.                           primary model; LSTM
+                                                          as secondary; apply
+                                                          dropout
+                                                          regularisation.
+
+  Granger Test Failure  No statistically significant      Still publishable as
+                        causality found.                  a null result; pivot
+                                                          to price index
+                                                          utility as standalone
+                                                          dashboard
+                                                          contribution.
+
+
+11. LITERATURE ANCHORS
+
+All references below are verified peer-reviewed publications or institutional
+reports:
+
+  Cavallo, A. (2018). Scraped Data and Sticky Prices. Review of Economics
+  and Statistics, 100(1), 105–119.
+  — Foundational methodology for online price scraping and CPI measurement
+    bias correction.
+
+  Cavallo, A. & Rigobon, R. (2016). The Billion Prices Project: Using Online
+  Prices for Inflation Measurement and Research. Journal of Economic
+  Perspectives, 30(2), 151–178.
+  — Benchmark framework for multi-country online price index construction
+    using scraped data.
+
+  Nakamura, E. & Steinsson, J. (2008). Five Facts About Prices: A
+  Reevaluation of Menu Cost Models. Quarterly Journal of Economics, 123(4),
+  1415–1464.
+  — Empirical foundation for CPI basket composition and price adjustment
+    frequency analysis.
+
+  World Food Programme VAM (2023). Food Security and Market Monitoring in
+  West Africa. WFP Vulnerability Analysis and Mapping Unit.
+  — Primary institutional data source and methodology reference for African
+    food market price tracking.
+
+  IMF African Department (2022). Overcoming Data Sparsity: A Machine Learning
+  Approach to Track Economic Activity in Sub-Saharan Africa. IMF Working
+  Paper WP/22/88.
+  — Establishes ML nowcasting as a viable framework for data-sparse African
+    environments; directly methodologically analogous to this project.
+
+
+12. EXTENSION ROADMAP
+
+Once the Accra pilot is validated, the framework extends across two
+dimensions:
+
+  Extension                Description
+  ─────────────────────────────────────────────────────────────────────────
+  Lagos, Nigeria           Apply the identical pipeline to Jumia Nigeria +
+                           Jiji.ng + open.fec.gov.ng data; compare the
+                           lead-lag structure against NBS Nigeria CPI.
+
+  Casablanca, Morocco      Target Avito.ma + Jumia Morocco; add an
+                           Arabic/French NLP layer; compare against HCP
+                           Morocco CPI.
+
+  Multi-city Index         Construct a pan-African informal price index
+                           aggregating all three cities with purchasing
+                           power parity weights.
+
+  API Productisation       Expose IMPI as a REST API for fintech, central
+                           bank, and research consumers; potential
+                           commercial application.
+
+  Sovereign Credit         Feed IMPI signals into sovereign credit risk
+  Integration              models as an alternative inflation input for
+                           African bond pricing.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IMPIN Capstone Proposal  |  Africa Business School, UM6P  |  May 2026
+Acheampong Yaw HINNEH  |  Abiola OKUNSANYA

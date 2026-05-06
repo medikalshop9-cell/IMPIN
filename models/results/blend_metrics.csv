@@ -1,0 +1,5 @@
+model,test_rmse,test_mae,test_mape_pct,dir_acc
+ARIMAX,60.9833,53.0184,18.4295,0.8333
+ARIMAX+Break,60.9948,53.0263,18.4318,0.8333
+Naive,23.515,18.6855,7.1917,0.5
+Blended,31.9553,28.0265,10.1138,0.75

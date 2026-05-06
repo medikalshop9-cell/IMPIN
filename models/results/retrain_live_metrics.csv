@@ -1,0 +1,8 @@
+model,test_rmse,test_mae,test_mape_pct,dir_acc
+HorizonBlend (γ=0.05),21.684,17.584,6.69,0.583
+Random Forest,22.026,17.759,6.83,0.417
+XGBoost,22.507,17.722,6.67,0.583
+Naive,23.515,18.686,7.19,0.5
+"ARIMAX(1,1,0) lag7",42.076,34.218,12.1,0.833
+ARIMAX+Boost,51.72,43.33,15.12,0.833
+Prophet,118.089,99.267,38.53,0.333

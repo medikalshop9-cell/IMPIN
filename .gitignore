@@ -1,0 +1,100 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPIN — .gitignore
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Secrets & credentials ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+
+# ── Data files (never commit raw or processed data) ───────────────────────────
+data/raw/
+data/processed/
+*.db
+*.sqlite
+*.sqlite3
+*.parquet
+*.csv.gz
+
+# ── Model artefacts ───────────────────────────────────────────────────────────
+models/artefacts/
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.h5
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.whl
+MANIFEST
+
+# ── Virtual environments & Conda ──────────────────────────────────────────────
+.venv/
+.venv-1/
+venv/
+ENV/
+env/
+.conda/
+conda-env/
+
+# ── Jupyter Notebooks ─────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE & editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── Playwright ────────────────────────────────────────────────────────────────
+playwright-report/
+test-results/
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Pytest & coverage ─────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ── Temporary files ───────────────────────────────────────────────────────────
+*.tmp
+*.bak
+*.swp
+*~
+
+.venv-1/
