@@ -1,5 +1,4 @@
-# IMPIN — Python dependencies (Streamlit Cloud)
-streamlit>=1.35
+ï»¿streamlit>=1.35
 plotly>=5.22
 pandas>=2.2
 numpy>=1.23
