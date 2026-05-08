@@ -484,8 +484,7 @@ elif page == "calc":
     pct_change      = forecast_index - 100.0
 
     st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
-    r1, r2, r3 = st.columns(3)
-    r1.metric("Current price (May 2026)", f"GHS {current_price:.2f}")
+    r2, r3 = st.columns(2)
     r2.metric(f"Estimated ({sel_month_label})", f"GHS {estimated_price:.2f}",
               f"{pct_change:+.1f}% vs today", delta_color="inverse")
     r3.metric("IMPIN forecast index", f"{forecast_index:.1f}", "base = 100")
@@ -596,6 +595,19 @@ elif page == "nowcast":
         )
     else:
         st.markdown('<div class="section-title">Full nowcast &mdash; all models</div>', unsafe_allow_html=True)
+
+    with st.expander("ARIMAX Controls — what drives direction & how the blend is weighted"):
+        st.markdown(
+            "**Direction** — ARIMAX tells you *which way* prices are moving and *why*, using two macro controls:\n\n"
+            "- **GHS/USD exchange rate** — currency depreciation pushing prices up\n"
+            "- **Brent crude at lag 6** — oil costs feeding through to food prices 6 months later\n\n"
+            "**HorizonBlend weights** — how the three models share influence:\n\n"
+            "| Component | Starting weight | Behaviour |\n"
+            "|---|---|---|\n"
+            "| Naive | **47 %** | Keeps the forecast anchored to reality; stops the model drifting too far from the last known price |\n"
+            "| XGBoost | **44 % → decays** | Picks up short-term non-linear patterns but fades out as the horizon grows |\n"
+            "| ARIMAX | **8 %** | Carries the macro signal (exchange rate, oil lag) into the blend |"
+        )
 
     wfp_actual = macro[macro["wfp_food_index"].notna()][["year_month","wfp_food_index"]].copy()
     norm_base  = float(wfp_actual.iloc[-1]["wfp_food_index"])
